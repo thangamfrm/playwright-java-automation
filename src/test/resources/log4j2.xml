@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+  <Properties>
+    <!-- Defines logs folder path and file pattern layouts -->
+    <Property name="LOG_DIR">logs</Property>
+    <Property name="CONSOLE_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %highlight{%-5level} %logger{36} - %msg%n</Property>
+    <Property name="FILE_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+    <!-- Console Appender -->
+    <Console name="ConsoleAppender" target="SYSTEM_OUT">
+      <PatternLayout pattern="${CONSOLE_PATTERN}"/>
+    </Console>
+
+    <!-- Rolling File Appender -->
+    <RollingFile name="FileAppender"
+                 fileName="${LOG_DIR}/app.log"
+                 filePattern="${LOG_DIR}/app-%d{yyyy-MM-dd}-%i.log.gz">
+      <PatternLayout pattern="${FILE_PATTERN}"/>
+      <Policies>
+        <!-- Rotate logs daily or when file size hits 10 Megabytes -->
+        <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+        <SizeBasedTriggeringPolicy size="10 MB" />
+      </Policies>
+      <!-- Retain a maximum of 7 historical archive log files -->
+      <DefaultRolloverStrategy max="7" />
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <!-- Root configuration targeting standard levels -->
+    <Root level="INFO">
+      <AppenderRef ref="ConsoleAppender" />
+      <AppenderRef ref="FileAppender" />
+    </Root>
+  </Loggers>
+</Configuration>
